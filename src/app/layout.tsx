@@ -1,6 +1,19 @@
 import type { Metadata } from "next";
+import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 
 import "./globals.css";
+
+const newsreader = Newsreader({
+  display: "swap",
+  subsets: ["latin"],
+  variable: "--font-editorial",
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  display: "swap",
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -12,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html className={`${newsreader.variable} ${plusJakartaSans.variable}`} lang="en">
       <body>
         <div className="site-shell">{children}</div>
       </body>

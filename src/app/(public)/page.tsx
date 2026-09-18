@@ -1,11 +1,13 @@
-import { PlaceholderPage } from "@/shared/ui/placeholder-page";
+import type { Metadata } from "next";
+
+import { LandingPage } from "@/modules/wedding-website/landing-page";
+
+export const metadata: Metadata = {
+  title: "Plan your wedding together",
+  description:
+    "Bring ceremonies, guests, RSVPs, vendors, tasks, and family into one calm wedding-planning workspace.",
+};
 
 export default function HomePage() {
-  return (
-    <PlaceholderPage
-      eyebrow="Make My Marriage"
-      title="Plan your wedding, together."
-      description="A calm, shared workspace for Indian families. The complete public experience will be built in a later product slice."
-    />
-  );
+  return <LandingPage />;
 }
