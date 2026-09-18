@@ -4,6 +4,8 @@ export const applicationErrorCodes = [
   "FORBIDDEN",
   "NOT_FOUND",
   "CONFLICT",
+  "EMAIL_ALREADY_EXISTS",
+  "INVALID_CREDENTIALS",
   "RATE_LIMITED",
   "INTERNAL_ERROR",
 ] as const;

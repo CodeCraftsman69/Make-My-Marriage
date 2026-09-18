@@ -1,0 +1,5 @@
+import {z} from "zod";
+const name=z.string().trim().min(2).max(100); const date=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v=>!Number.isNaN(Date.parse(`${v}T00:00:00.000Z`)),"Invalid wedding date.");
+export const createWeddingSchema=z.object({brideName:name,groomName:name,weddingDate:date,city:z.string().trim().min(2).max(100),state:z.string().trim().min(2).max(100),relationship:z.enum(["BRIDE","GROOM","OTHER"]),title:z.string().trim().min(2).max(150).optional(),description:z.string().trim().max(2000).optional()}).strict();
+export const updateWeddingSchema=z.object({brideName:name.optional(),groomName:name.optional(),weddingDate:date.optional(),city:z.string().trim().min(2).max(100).optional(),state:z.string().trim().min(2).max(100).optional(),title:z.string().trim().min(2).max(150).optional(),description:z.string().trim().max(2000).nullable().optional()}).strict().refine(v=>Object.keys(v).length>0,"At least one field is required.");
+export type CreateWeddingInput=z.infer<typeof createWeddingSchema>; export type UpdateWeddingInput=z.infer<typeof updateWeddingSchema>;

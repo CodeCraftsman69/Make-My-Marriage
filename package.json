@@ -13,9 +13,10 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node --test --experimental-strip-types tests/security.test.ts tests/validation.test.ts tests/http.test.ts"
+    "test": "node --test --experimental-strip-types tests/security.test.ts tests/validation.test.ts tests/http.test.ts tests/auth.test.ts tests/wedding.test.ts"
   },
   "dependencies": {
+    "@node-rs/argon2": "^2.2.1",
     "mongodb": "^7.6.0",
     "next": "^16.3.5",
     "react": "^19.3.0",

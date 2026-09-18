@@ -1,0 +1,2 @@
+import type {ClientSession,ObjectId} from "mongodb"; import type {WeddingDocument} from "./wedding-types.ts";
+export interface WeddingRepository{create(input:Omit<WeddingDocument,"_id">,session?:ClientSession):Promise<WeddingDocument>;findById(id:ObjectId,session?:ClientSession):Promise<WeddingDocument|null>;update(id:ObjectId,input:Partial<WeddingDocument>,session?:ClientSession):Promise<WeddingDocument|null>}

@@ -13,6 +13,8 @@ const statusByCode: Record<ApplicationErrorCode, number> = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   CONFLICT: 409,
+  EMAIL_ALREADY_EXISTS: 409,
+  INVALID_CREDENTIALS: 401,
   RATE_LIMITED: 429,
   INTERNAL_ERROR: 500,
 };

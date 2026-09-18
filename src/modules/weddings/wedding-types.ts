@@ -1,0 +1,4 @@
+import type { ObjectId } from "mongodb";
+export type WeddingDocument={_id:ObjectId;bride:{name:string};groom:{name:string};title:string;weddingDate:Date;timezone:"Asia/Kolkata";location:{city:string;state:string};description:string|null;coverPhotoId:ObjectId|null;status:"ACTIVE"|"ARCHIVED";createdBy:ObjectId;createdAt:Date;updatedAt:Date;deletedAt:Date|null};
+export type WeddingView={id:string;brideName:string;groomName:string;title:string;weddingDate:string;timezone:string;location:{city:string;state:string};description:string|null;status:"ACTIVE"|"ARCHIVED"};
+export const toWeddingView=(w:WeddingDocument):WeddingView=>({id:w._id.toHexString(),brideName:w.bride.name,groomName:w.groom.name,title:w.title,weddingDate:w.weddingDate.toISOString(),timezone:w.timezone,location:w.location,description:w.description,status:w.status});
