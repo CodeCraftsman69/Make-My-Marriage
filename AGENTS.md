@@ -43,6 +43,7 @@
 - Do not invent requirements beyond the PRD and approved design documents.
 - Prefer the simplest implementation that satisfies V1 requirements.
 - Run lint, typecheck, relevant tests, and build when the local toolchain is available. Fix only issues introduced by the current change.
+- For every major feature, vertical slice, architecture change, or substantial redesign, update `docs/05-DEVELOPMENT-LOG.md` in the same change. Record delivered scope, important decisions and constraints, verification performed, and explicit remaining work. Do not add individual entries for trivial fixes or formatting-only changes.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
