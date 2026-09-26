@@ -3,7 +3,9 @@ import { handleApiError, successResponse } from "@/shared/http";
 
 export async function GET() {
   try {
-    return successResponse({ user: await requireAuth() });
+    const response = successResponse({ user: await requireAuth() });
+    response.headers.set("Cache-Control", "private, no-store");
+    return response;
   } catch (error: unknown) {
     return handleApiError(error);
   }

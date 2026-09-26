@@ -1,5 +1,53 @@
 # Make My Marriage Development Log
 
+## 2026-09-27 — Personalized dashboard and wedding setup
+
+**Status:** Implemented — pending commit
+
+### Delivered
+
+- Added the authenticated user's name to both dashboard and setup.
+- Redesigned the dashboard with a burgundy wedding overview, timezone-aware calendar-day countdown, responsive planning cards, wedding details, and upcoming/activity empty states.
+- Followed PRD V1 sections 9–17: no invented metrics, activity, or working actions for unimplemented modules; planning cards explicitly state Coming soon.
+- Redesigned setup as a responsive editorial introduction with grouped couple, date/location, and title fields. Corrected optional location requirements to match the PRD.
+- Added authenticated India city search through a server-side Geoapify adapter. Selecting a suggestion fills city and state; users can edit or enter them manually. Included provider/data attribution, input validation, bounded results, timeout, and stale-response protection.
+- Fixed blank optional title submission and network-error handling in setup.
+
+### Configuration and verification
+
+- Optional server-only GEOAPIFY_API_KEY documented in .env.example. No new packages.
+- 23 tests passed, including a new optional-location/default-title regression test. TypeScript and production build passed.
+- Live provider verification requires a configured Geoapify key. Authenticated visual browser verification remains pending; no signed-in browser tab was available.
+
+### Remaining work
+
+- Configure Geoapify credentials to enable live suggestions and verify actual city/state matches.
+- Events, tasks, guests/RSVP, vendors, and activity history remain separate future slices.
+
+## 2026-09-26 — Logout controls and browser tab synchronization
+
+**Status:** Implemented — pending commit
+
+### Delivered
+
+- Added a visible logout control throughout the private app and wedding setup.
+- Reused server-side session invalidation and cookie clearing; failed logout requests show a retry error.
+- Notify sibling tabs through BroadcastChannel and storage events without sharing session tokens. Tabs validate the current session before redirecting to login.
+- Recheck authentication on mount, focus, visibility changes, browser history restoration, and every minute. Account changes trigger a full reload to discard stale private UI.
+- Successful logout performs a full navigation to discard the client router cache. Current-user responses explicitly disable caching.
+
+### Verification
+
+- Existing 22 automated tests passed, including session invalidation and repeated logout.
+- Lint and TypeScript checks passed.
+- Live multi-tab browser verification remains pending.
+
+### Decisions and remaining work
+
+- Logout applies to the current browser session. Other devices and browser profiles retain their separate sessions.
+- Suspended tabs reconcile when the browser resumes them. Network failures do not count as proof of session expiration.
+- No new dependencies introduced.
+
 This document records meaningful product and engineering work completed in the repository. It complements the PRD and design documents: those files describe the intended product, while this log records what has actually been implemented.
 
 ## How to maintain this log

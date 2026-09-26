@@ -23,6 +23,7 @@ const environmentSchema = z.object({
 
   RESEND_API_KEY: optionalString(z.string().min(1)),
   EMAIL_FROM: optionalString(z.string().min(3)),
+  GEOAPIFY_API_KEY: optionalString(z.string().min(1)),
 });
 
 const parsedEnvironment = environmentSchema.safeParse(process.env);
