@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 const LOGOUT_EVENT = "mmm:logout";
 
-export function SessionControls({ userId }: { userId: string }) {
+export function SessionControls({ userId, publicPage = false, embedded = false }: { userId: string | null; publicPage?: boolean; embedded?: boolean }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const channel = useRef<BroadcastChannel | null>(null);
@@ -13,7 +14,7 @@ export function SessionControls({ userId }: { userId: string }) {
     let disposed = false;
     let checking = false;
     const controller = new AbortController();
-    const leave = () => window.location.replace("/login");
+    const leave = () => publicPage ? window.location.reload() : window.location.replace("/login");
     async function checkSession() {
       if (checking) return;
       checking = true;
@@ -23,7 +24,7 @@ export function SessionControls({ userId }: { userId: string }) {
           signal: controller.signal,
         });
         if (disposed) return;
-        if (response.status === 401) leave();
+        if (response.status === 401 && userId) leave();
         else if (response.ok) {
           const body = await response.json();
           // Another tab may have signed into a different account.
@@ -61,7 +62,7 @@ export function SessionControls({ userId }: { userId: string }) {
       window.removeEventListener("pageshow", checkSession);
       document.removeEventListener("visibilitychange", checkSession);
     };
-  }, [userId]);
+  }, [userId, publicPage]);
 
   async function logout() {
     if (busy) return;
@@ -78,14 +79,16 @@ export function SessionControls({ userId }: { userId: string }) {
     try { channel.current?.postMessage("logout"); } catch { /* Optional transport. */ }
     try { localStorage.setItem(LOGOUT_EVENT, crypto.randomUUID()); } catch { /* Storage may be disabled. */ }
     // A full navigation discards the private client router cache.
-    window.location.replace("/login");
+    window.location.replace(publicPage ? "/" : "/login");
   }
 
   return (
-    <div className="session-controls">
-      <button className="auth-submit" disabled={busy} onClick={logout} type="button">
+    <div className={publicPage ? "public-account-controls" : embedded ? "studio-session-controls" : "session-controls"}>
+      {!publicPage && !embedded && <Link className="app-home-link" href="/">Make My Marriage · Home</Link>}
+      {publicPage && <Link href={userId ? "/app/dashboard" : "/login"}>{userId ? "Dashboard" : "Sign in"}</Link>}
+      {!userId ? <Link className="public-get-started" href="/register">Get started</Link> : <button className="auth-submit" disabled={busy} onClick={logout} type="button">
         {busy ? "Logging out…" : "Log out"}
-      </button>
+      </button>}
       {error ? <p className="auth-error" role="alert">{error}</p> : null}
     </div>
   );

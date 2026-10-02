@@ -4,9 +4,9 @@ import { useRef, useState } from "react";
 
 type Place = { city: string; state: string };
 
-export function LocationFields() {
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
+export function LocationFields({ initialCity = "", initialState = "" }: { initialCity?: string; initialState?: string }) {
+  const [city, setCity] = useState(initialCity);
+  const [state, setState] = useState(initialState);
   const [results, setResults] = useState<Place[]>([]);
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);

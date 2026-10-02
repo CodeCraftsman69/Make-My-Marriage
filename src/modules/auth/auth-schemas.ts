@@ -24,3 +24,7 @@ export const loginSchema = z
 
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+
+export const forgotPasswordSchema = z.object({ email: emailSchema }).strict();
+export const resetTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/, "This reset link is invalid. Request a new one.");
+export const resetPasswordSchema = z.object({ token: resetTokenSchema, password: passwordSchema }).strict();

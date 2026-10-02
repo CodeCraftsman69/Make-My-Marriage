@@ -1,5 +1,77 @@
 # Make My Marriage Development Log
 
+## 2026-10-02 — Password recovery
+
+**Status:** Implemented — pending commit and live delivery verification
+
+### Delivered
+
+- Replaced forgot/reset password placeholders with branded recovery screens, password confirmation, visibility toggle, loading/error states, and a success link back to login. Login's existing Forgot password link now opens the functional request flow.
+- Added POST /api/v1/auth/forgot-password and POST /api/v1/auth/reset-password, following the documented input and response conventions.
+- Resend sends a plain-text link to /reset-password/{token}, built exclusively from APP_BASE_URL. The reset page disables indexing and referrer transmission.
+- Reset tokens use 32 cryptographically random bytes, persist only their SHA-256 hash, expire after 30 minutes, and are consumed once. A new request replaces the previous link.
+- Native MongoDB transaction updates the Argon2id password hash, marks the token used, and deletes all sessions for that user. No automatic login after reset. Existing tabs receive session-change notifications and continue authoritative session checks.
+- Added persistent request throttling: at most three requests per normalized-email hash per fixed 15-minute window. Unknown accounts and throttled requests receive the same confirmation. Email/database failure messages are not exposed as account-existence signals; logs contain no address, token, or password.
+- Added passwordResetTokens unique token-hash/expiry indexes and TTL cleanup for passwordResetRequestLimits. Token records use userId as their primary key to enforce one current link per account.
+- No additional packages, queues, or infrastructure services.
+
+### Configuration and verification
+
+- Requires MongoDB transactions, RESEND_API_KEY, a verified EMAIL_FROM sender, and the correct APP_BASE_URL (HTTPS in production).
+- All 31 tests passed. Added five service tests for token hashing/expiry, normalization/throttling, password hashing/session revocation, expired/superseded links, and concurrent consumption using an in-memory store.
+- Lint, TypeScript, and whitespace checks passed. Production build is blocked only by existing Google Fonts download failures.
+- Live Resend delivery, real MongoDB transaction rollback/concurrency, and authenticated browser end-to-end testing remain pending. No real email was sent or account password changed during implementation.
+- Per-email throttling does not replace deployment-level IP/bot abuse protection.
+
+## 2026-10-02 — Reference-led wedding studio design
+
+**Status:** Implemented — pending commit
+
+### Delivered
+
+- Applied the supplied visual reference across dashboard, landing page, private navigation, setup, editing, and form styling: warm ivory, deep wine, restrained gold, editorial headings, thin borders, compact cards, and a shared monogram wordmark.
+- Added a shared workspace header with the signed-in user's identity, working Overview/Wedding details links, logo navigation to the public home page, and the existing cross-tab logout behavior.
+- Refined the wedding hero, countdown, four planning cards, three lower panels, and footer. Actual wedding values remain server-loaded; no reference-image metrics or activities were inserted as real data.
+- Upcoming modules remain visibly unavailable. Budget remains excluded under PRD V1; guest-site publication/sharing was not added as decorative working controls.
+- Landing-page calls to action and account controls retain session-aware behavior. Responsive layouts support narrow mobile screens.
+
+### Verification
+
+- Lint and TypeScript passed. Production build reported only existing Google Fonts network download failures.
+- Inspected actual components in a local server-rendered visual fixture with sample data and fallback fonts, including desktop dashboard and landing page plus 390px dashboard, landing page, and setup layouts.
+- Fixture lives outside the repository and does not bypass production authentication or write database records. Authenticated end-to-end browser interactions remain unverified.
+- No new packages or external services were added.
+
+## 2026-10-02 — Home navigation and session-aware landing page
+
+**Status:** Implemented — pending commit
+
+- Added a Home link to the private app and wedding setup account bar.
+- Landing-page header now shows Dashboard and Log out for authenticated users, or Sign in and Get started for visitors. Footer and workspace calls to action also respect the current session.
+- Reused logout and cross-tab session checks on the public page. Logging out there returns to the landing page; expired sessions refresh the public controls rather than forcing the visitor into login.
+- Public-page session data is resolved on the server; no tokens are exposed to client components.
+- Verification: TypeScript, lint, 10 authentication tests, and diff whitespace checks passed. Production build remains blocked only by existing Google Fonts downloads. Authenticated browser verification is pending.
+
+## 2026-10-02 — Wedding editing and friendlier setup
+
+**Status:** Implemented — pending commit
+
+### Delivered
+
+- Added dashboard navigation to the authenticated /app/wedding edit page with prefilled wedding details.
+- Shared the setup form between creation and editing; edit submits to the existing authorized PATCH endpoint and excludes membership-role changes.
+- Automatically suggest a wedding title as names change, with an explicit option to customize it. Existing custom titles are preserved; the server uses the same bounded title generator for default titles.
+- Added optional description, saved location prefill, Save/Cancel actions, submission feedback, and a dashboard success message after saving. Full navigation fetches fresh dashboard details and countdown.
+- Optional city/state values can now be cleared. Date validation rejects calendar overflow such as February 30.
+- Wedding-date edits do not change event dates. No dependencies were added.
+
+### Verification
+
+- Added regression tests for title generation/length, optional-field clearing validation, ownership-field rejection, and leap-day/calendar-date validation.
+- All 26 tests and TypeScript checks passed. Lint passed after resolving the form navigation warning. Git diff whitespace validation passed.
+- Production build is blocked by downloads of the existing Newsreader and Plus Jakarta Sans Google Fonts; the final build attempt reported only those external fetch errors.
+- Authenticated browser and live database edit verification remain pending.
+
 ## 2026-09-27 — Personalized dashboard and wedding setup
 
 **Status:** Implemented — pending commit

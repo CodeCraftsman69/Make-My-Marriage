@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 
 import "./globals.css";
+import "./studio.css";
 
 const newsreader = Newsreader({
   display: "swap",

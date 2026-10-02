@@ -304,3 +304,24 @@ a {
 @media(max-width: 1050px) { .planning-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dashboard-bottom { grid-template-columns: 1fr 1fr; } .dashboard-bottom > aside { grid-column: 1 / -1; } }
 @media(max-width: 760px) { .setup-experience { grid-template-columns: 1fr; } .setup-story { position: static; } .story-mark { display: none; } .setup-steps { display: none; } .wedding-banner { grid-template-columns: 1fr; } .countdown { border-left: 0; border-top: 1px solid #ffffff35; padding: 1.5rem 0 0; } .workspace-welcome, .section-heading { align-items: start; flex-direction: column; } }
 @media(max-width: 480px) { .planning-cards, .dashboard-bottom { grid-template-columns: 1fr; } .planning-card > p:not(.card-category) { min-height: 0; } }
+.wedding-edit-page { max-width: 760px; margin: 1rem auto 4rem; padding: 2rem clamp(1.25rem, 4vw, 3rem); background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; }
+.wedding-edit-page h1 { font: 500 clamp(2rem, 4vw, 3rem)/1.2 Georgia, serif; }
+.wedding-edit-page header > p:last-child { color: var(--muted); line-height: 1.6; margin-bottom: 2rem; }
+.title-toggle { display: flex; align-items: start; gap: .6rem; font-size: .85rem; line-height: 1.5; }
+.title-toggle input { accent-color: var(--accent); margin-top: .2rem; }
+.auth-field input[readonly] { background: #f3ece4; color: var(--accent); }
+.auth-field textarea { width: 100%; padding: .8rem; border: 1px solid var(--border); border-radius: .65rem; background: white; color: var(--foreground); font: inherit; font-weight: 400; resize: vertical; }
+.auth-field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wedding-form-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+.wedding-form-actions > .auth-submit { flex: 1; padding: .8rem 1.25rem; }
+.wedding-form-actions > .location-search { margin: 0; }
+.wedding-edit-link { text-align: right; margin-bottom: 1rem; }
+.wedding-edit-link a { font-size: .85rem; text-underline-offset: .25rem; }
+.wedding-saved { padding: 1rem; background: #e9f0e6; border: 1px solid #b4c5a8; border-radius: .65rem; color: #34532a; }
+.session-controls .app-home-link { margin-right: auto; color: var(--accent); font: 600 1rem Georgia, serif; text-underline-offset: .25rem; }
+.public-account-controls { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.public-account-controls > a { font-size: .85rem; font-weight: 600; }
+.public-account-controls .auth-submit, .public-get-started { min-height: 40px; padding: .6rem 1rem; font-size: .8rem; }
+.public-get-started { display: inline-flex; align-items: center; background: var(--accent); color: white; border-radius: .4rem; }
+.public-account-controls .auth-error { position: absolute; top: 100%; right: 1rem; max-width: 22rem; background: var(--surface); }
+@media(max-width: 640px) { .public-account-controls { gap: .5rem !important; } .public-account-controls > a { font-size: .75rem; } .public-account-controls .auth-submit { padding: .5rem .65rem; font-size: .75rem; } .public-get-started { display: none; } }

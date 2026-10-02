@@ -5,3 +5,27 @@ test("V1 wedding setup accepts omitted location and generates the default title"
   assert.deepEqual(built.wedding.location, { city: "", state: "" });
   assert.equal(built.wedding.title, "Priya & Rahul Wedding");
 });
+import { suggestWeddingTitle } from "../src/modules/weddings/wedding-title.ts";
+
+test("suggested titles follow names and stay within validation limits", () => {
+  assert.equal(suggestWeddingTitle(" Priya ", "Rahul"), "Priya & Rahul Wedding");
+  assert.equal(suggestWeddingTitle("", ""), "Our Wedding");
+  const title = suggestWeddingTitle("A".repeat(100), "B".repeat(100));
+  assert.ok(title.length <= 150);
+  assert.equal(updateWeddingSchema.safeParse({ title }).success, true);
+});
+
+test("wedding edits accept clearing optional details and reject ownership fields", () => {
+  assert.deepEqual(updateWeddingSchema.parse({ city: "  ", state: "", description: "" }), { city: "", state: "", description: "" });
+  assert.equal(updateWeddingSchema.safeParse({}).success, false);
+  assert.equal(updateWeddingSchema.safeParse({ relationship: "BRIDE" }).success, false);
+  assert.equal(updateWeddingSchema.safeParse({ weddingId: new ObjectId().toHexString(), title: "Changed" }).success, false);
+});
+
+test("create and edit reject impossible dates but accept leap days", () => {
+  for (const weddingDate of ["2027-02-29", "2028-02-30", "2027-04-31"]) {
+    assert.equal(createWeddingSchema.safeParse({ ...input, weddingDate }).success, false);
+    assert.equal(updateWeddingSchema.safeParse({ weddingDate }).success, false);
+  }
+  assert.equal(updateWeddingSchema.safeParse({ weddingDate: "2028-02-29" }).success, true);
+});

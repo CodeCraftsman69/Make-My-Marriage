@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SessionControls } from "@/modules/auth/session-controls";
 
 import styles from "./landing-page.module.css";
+import { StudioBrand } from "@/shared/ui/studio-brand";
 
 type IconName = "activity" | "arrow" | "calendar" | "camera" | "check" | "family" | "globe" | "guest" | "heart" | "lock" | "task" | "vendor";
 
@@ -40,16 +42,16 @@ const faqs = [
   ["Can both families collaborate?", "Yes. Invite the people involved, assign clear responsibilities, and plan together in one shared workspace."],
 ];
 
-export function LandingPage() {
+export function LandingPage({ userId = null }: { userId?: string | null }) {
   return (
-    <main className={styles.page}>
-      <Header />
+    <main className={`${styles.page} studio-landing`}>
+      <Header userId={userId} />
       <section className={styles.hero}>
         <div className={styles.heroCopy}>
           <span className={styles.eyebrow}>Thoughtful planning for Indian weddings</span>
           <h1>One place for every plan—and everyone you love.</h1>
           <p>Bring your events, guests, family, tasks, and vendors together, so planning feels clear from the first list to the final celebration.</p>
-          <div className={styles.heroActions}><Link className={styles.primaryButton} href="/register">Create your workspace <Icon name="arrow" /></Link><a className={styles.textButton} href="#inside">See what&apos;s inside</a></div>
+          <div className={styles.heroActions}><Link className={styles.primaryButton} href={userId ? "/app/dashboard" : "/register"}>{userId ? "Open your dashboard" : "Create your workspace"} <Icon name="arrow" /></Link><a className={styles.textButton} href="#inside">See what&apos;s inside</a></div>
           <div className={styles.heroNote}><Icon name="lock" size={16}/><span>Your plans stay private. Guests only see what you share.</span></div>
         </div>
         <div className={styles.heroVisual}>
@@ -68,7 +70,7 @@ export function LandingPage() {
 
       <section className={styles.featureStory}>
         <div className={styles.storyPhoto}><Image alt="Family celebrating together during a haldi ceremony" fill sizes="(max-width: 800px) 100vw, 50vw" src="/images/haldi-family.jpg" /></div>
-        <div className={styles.storyCopy}><span>Designed around real families</span><h2>Everyone can help.<br/>Nobody has to chase.</h2><p>Give every task a clear owner and keep decisions easy to find—even when both families are planning from different cities.</p><ul><li><Icon name="check"/>Invite parents, siblings, and coordinators</li><li><Icon name="check"/>Assign tasks to the family member handling them</li><li><Icon name="check"/>Keep progress visible instead of buried in chat</li></ul><Link className={styles.inlineLink} href="/register">Start planning together <Icon name="arrow" size={17}/></Link></div>
+        <div className={styles.storyCopy}><span>Designed around real families</span><h2>Everyone can help.<br/>Nobody has to chase.</h2><p>Give every task a clear owner and keep decisions easy to find—even when both families are planning from different cities.</p><ul><li><Icon name="check"/>Invite parents, siblings, and coordinators</li><li><Icon name="check"/>Assign tasks to the family member handling them</li><li><Icon name="check"/>Keep progress visible instead of buried in chat</li></ul><Link className={styles.inlineLink} href={userId ? "/app/dashboard" : "/register"}>Start planning together <Icon name="arrow" size={17}/></Link></div>
       </section>
 
       <section className={styles.productSection}>
@@ -87,13 +89,13 @@ export function LandingPage() {
       </section>
 
       <section className={styles.faqSection}><div><span>Questions, answered</span><h2>Made to feel easy before you even begin.</h2></div><div className={styles.faqList}>{faqs.map(([question,answer])=><details key={question}><summary>{question}<b>+</b></summary><p>{answer}</p></details>)}</div></section>
-      <section className={styles.finalCta}><span>Ready when you are</span><h2>Make room for the celebration.</h2><p>Put the planning in one place, and give your family a calmer way to bring it all together.</p><Link className={styles.lightButton} href="/register">Create your workspace <Icon name="arrow"/></Link></section>
-      <Footer />
+      <section className={styles.finalCta}><span>Ready when you are</span><h2>Make room for the celebration.</h2><p>Put the planning in one place, and give your family a calmer way to bring it all together.</p><Link className={styles.lightButton} href={userId ? "/app/dashboard" : "/register"}>{userId ? "Open your dashboard" : "Create your workspace"} <Icon name="arrow"/></Link></section>
+      <Footer userId={userId} />
     </main>
   );
 }
 
-function Header() { return <header className={styles.header}><div className={styles.navbar}><Link aria-label="Make My Marriage home" className={styles.brand} href="/"><Image alt="Make My Marriage" height={40} priority src="/brand/make-my-marriage.svg" width={260}/></Link><nav aria-label="Primary navigation"><a href="#inside">Features</a><a href="#how-it-works">How it works</a></nav><div><Link className={styles.signIn} href="/login">Sign in</Link><Link className={styles.navButton} href="/register">Get started</Link></div></div></header>; }
+function Header({ userId }: { userId: string | null }) { return <header className={styles.header}><div className={styles.navbar}><StudioBrand/><nav aria-label="Primary navigation"><a href="#inside">Features</a><a href="#how-it-works">How it works</a></nav><SessionControls userId={userId} publicPage /></div></header>; }
 
 function ProductPeek() { return <div className={styles.productPeek}><div><span className={styles.peekMark}>M</span><span><small>Next up</small><b>Mehendi planning</b></span><em>4 days</em></div><ul><li><i className={styles.done}><Icon name="check" size={13}/></i><span><b>Confirm artist arrival time</b><small>Completed</small></span></li><li><i/><span><b>Share outfit note with guests</b><small>Assigned to Neha</small></span></li><li><i/><span><b>Finalize welcome drinks</b><small>Due tomorrow</small></span></li></ul></div>; }
 
@@ -101,4 +103,4 @@ function PlanningPreview() { return <div className={styles.planningPreview}><div
 
 function TaskRow({done=false,title,meta}:{done?:boolean;title:string;meta:string}) { return <div className={styles.taskRow}><i className={done?styles.done:""}>{done&&<Icon name="check" size={12}/>}</i><span><b>{title}</b><small>{meta}</small></span><Icon name="arrow" size={15}/></div>; }
 
-function Footer() { return <footer className={styles.footer}><div className={styles.footerMain}><div><Image alt="Make My Marriage" height={40} src="/brand/make-my-marriage.svg" width={260}/><p>A shared planning workspace for weddings with many moments—and many people who care.</p></div><nav><b>Product</b><a href="#inside">Features</a><a href="#how-it-works">How it works</a><Link href="/register">Create workspace</Link></nav><nav><b>Account</b><Link href="/login">Sign in</Link><a href="mailto:hello@makemymarriage.com">Contact</a><a href="#privacy">Privacy</a></nav></div><div className={styles.footerBottom}><span>© {new Date().getFullYear()} Make My Marriage</span><span>Planned with care</span></div></footer>; }
+function Footer({ userId }: { userId: string | null }) { return <footer className={styles.footer}><div className={styles.footerMain}><div><Image alt="Make My Marriage" height={40} src="/brand/make-my-marriage.svg" width={260}/><p>A shared planning workspace for weddings with many moments—and many people who care.</p></div><nav><b>Product</b><a href="#inside">Features</a><a href="#how-it-works">How it works</a><Link href={userId ? "/app/dashboard" : "/register"}>{userId ? "Your workspace" : "Create workspace"}</Link></nav><nav><b>Account</b><Link href={userId ? "/app/dashboard" : "/login"}>{userId ? "Dashboard" : "Sign in"}</Link><a href="mailto:hello@makemymarriage.com">Contact</a><a href="#privacy">Privacy</a></nav></div><div className={styles.footerBottom}><span>© {new Date().getFullYear()} Make My Marriage</span><span>Planned with care</span></div></footer>; }
