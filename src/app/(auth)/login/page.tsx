@@ -3,12 +3,14 @@ import { redirect } from "next/navigation";
 
 import { AuthForm } from "@/modules/auth/auth-form";
 import { getCurrentUser } from "@/modules/auth";
+import { authReturnPath } from "@/modules/auth/auth-return-path";
 
-export const metadata: Metadata = { title: "Log in" };
+export const metadata: Metadata = { title: "Log in", referrer: "no-referrer", robots: { index: false, follow: false } };
 
-export default async function LoginPage() {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
+  const returnTo = authReturnPath((await searchParams).next);
   if (await getCurrentUser()) {
-    redirect("/app/dashboard");
+    redirect(returnTo);
   }
 
   return (
@@ -20,7 +22,7 @@ export default async function LoginPage() {
           <h1>Welcome back</h1>
           <p>Sign in to continue planning with your family.</p>
         </div>
-        <AuthForm mode="login" />
+        <AuthForm mode="login" returnTo={returnTo} />
       </section>
     </main>
   );

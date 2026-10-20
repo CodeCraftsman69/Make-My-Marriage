@@ -3,6 +3,8 @@ import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 
 import "./globals.css";
 import "./studio.css";
+import "./family.css";
+import "@/shared/ui/confirmation-dialog.css";
 
 const newsreader = Newsreader({
   display: "swap",

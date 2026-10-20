@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { authReturnPath } from "./auth-return-path";
 
 type AuthFormProps = {
   mode: "login" | "register";
+  returnTo?: string;
 };
 
 type ErrorEnvelope = {
@@ -15,7 +17,7 @@ type ErrorEnvelope = {
   };
 };
 
-export function AuthForm({ mode }: AuthFormProps) {
+export function AuthForm({ mode, returnTo }: AuthFormProps) {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>();
@@ -47,7 +49,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         return;
       }
 
-      router.push("/app/dashboard");
+      router.push(authReturnPath(returnTo));
       router.refresh();
     } catch {
       setError("Unable to reach the server. Please try again.");
@@ -125,7 +127,7 @@ export function AuthForm({ mode }: AuthFormProps) {
 
       <p className="auth-switch">
         {isRegistration ? "Already have an account?" : "New to Make My Marriage?"}{" "}
-        <Link href={isRegistration ? "/login" : "/register"}>
+        <Link href={`${isRegistration ? "/login" : "/register"}?next=${encodeURIComponent(authReturnPath(returnTo))}`}>
           {isRegistration ? "Sign in" : "Create account"}
         </Link>
       </p>

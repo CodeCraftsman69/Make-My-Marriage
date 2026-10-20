@@ -1,0 +1,53 @@
+.family-workspace { max-width: 1160px; }
+.family-permissions { border: 1px solid #e8e2d9; padding: 16px; border-radius: 8px; color: #74665f; font-size: 13px; line-height: 1.7; }
+.family-permissions summary { cursor: pointer; color: #581825; font-weight: 600; }
+.family-permissions dt { font-weight: 600; color: #581825; margin-top: 12px; }
+.family-permissions dd { margin-left: 0; }
+.family-protected { flex-basis: 100%; color: #74665f; }
+.studio-nav a { min-height: 44px; display: inline-flex; align-items: center; }
+.family-dashboard-avatars { display: flex; gap: 8px; flex-wrap: wrap; margin: 24px 0 16px; }
+.family-heading, .family-section-title { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.family-heading h1 { font: 400 clamp(32px, 4vw, 44px)/1.15 var(--font-editorial), Georgia, serif; color: #581825; margin: 10px 0; }
+.family-heading p, .family-section-title p, .family-member p, .family-invite-row p { color: #74665f; font-size: 14px; margin: 5px 0; overflow-wrap: anywhere; }
+.family-primary { background: #581825; color: #fff; border: 1px solid #581825; border-radius: 6px; min-height: 44px; padding: 12px 20px; font-size: 14px; font-weight: 600; text-decoration: none; text-align: center; cursor: pointer; }
+.family-primary:hover { background: #713046; }
+.family-primary:disabled, .family-actions button:disabled { opacity: .6; cursor: wait; }
+.family-workspace button:focus-visible, .family-join button:focus-visible, .family-join a:focus-visible { outline: 3px solid #c5a059; outline-offset: 3px; }
+.family-access { display: flex; align-items: center; gap: 14px; padding: 18px 0; margin: 18px 0; border-top: 1px solid #e8e2d9; border-bottom: 1px solid #e8e2d9; }
+.family-access p, .family-form-hint { color: #74665f; font-size: 13px; line-height: 1.7; margin: 0; }
+.family-badge { display: inline-block; font-size: 11px; text-transform: capitalize; padding: 5px 10px; border: 1px solid #e5d7be; border-radius: 5px; color: #664a1c; background: #f9f5ee; white-space: nowrap; }
+.family-form-panel { display: grid; grid-template-columns: 1fr 1.5fr; gap: 36px; padding: 30px; background: #fffdf9; border: 1px solid #e5d7be; border-radius: 12px; margin-bottom: 32px; }
+.family-form-panel h2, .family-section h2, .family-join h2 { font: 400 28px/1.3 var(--font-editorial), Georgia, serif; color: #581825; margin: 8px 0; }
+.family-form-panel p { font-size: 14px; color: #74665f; line-height: 1.7; }
+.family-form-panel .auth-form { margin: 0; }
+.family-section { margin: 32px 0; }
+.family-section-title { margin-bottom: 16px; }
+.family-count { font: 500 13px var(--font-sans), sans-serif; color: #74665f; margin-left: 8px; }
+.family-members { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.family-member { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; padding: 24px; border: 1px solid #e8e2d9; background: #fffdf9; border-radius: 10px; }
+.family-avatar { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; background: #f3e8e8; color: #581825; font-family: var(--font-editorial), Georgia, serif; font-size: 18px; }
+.family-member-info { flex: 1; min-width: 120px; }
+.family-member h3, .family-invite-row h3 { font-size: 15px; margin: 0 0 5px; color: #581825; }
+.family-member small, .family-invite-row small { color: #74665f; font-size: 12px; }
+.family-relationship { text-transform: capitalize; }
+.family-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.family-actions button:not(.family-primary), .family-danger, .family-switch { min-height: 44px; border: 1px solid #e8e2d9; background: transparent; border-radius: 6px; color: #581825; padding: 10px 14px; cursor: pointer; font-size: 13px; }
+.family-actions .family-danger, .family-danger, .family-delivery-failed { color: #9b2536; }
+.family-member > .family-danger { margin-left: auto; }
+.family-invites { border: 1px solid #e8e2d9; border-radius: 10px; overflow: hidden; background: #fffdf9; }
+.family-invite-row { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 20px; padding: 22px; border-bottom: 1px solid #e8e2d9; }
+.family-invite-row:last-child { border-bottom: 0; }
+.family-empty { padding: 24px; border: 1px dashed #dfd1bf; border-radius: 10px; font-size: 14px; color: #74665f; line-height: 1.7; }
+.family-join .auth-heading { margin-top: 32px; }
+.family-join .auth-card { max-width: 560px; }
+.family-join .auth-form > p { overflow-wrap: anywhere; }
+@media(max-width: 760px) {
+  .family-heading, .family-section-title { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .family-heading > button { width: 100%; }
+  .family-members, .family-form-panel { grid-template-columns: 1fr; }
+  .family-form-panel { padding: 20px; gap: 12px; }
+  .family-invite-row { grid-template-columns: 1fr; gap: 12px; }
+  .family-member { padding: 20px; }
+  .family-access { align-items: flex-start; }
+  .family-section-title p { margin: 0; }
+}

@@ -1,5 +1,86 @@
 # Make My Marriage Development Log
 
+## 2026-10-18 — Reusable application confirmation dialogs
+
+**Status:** Implemented — interactive browser verification pending
+
+- Added a domain-neutral ConfirmationDialog under src/shared/ui with application styling, descriptive action text, neutral/destructive variants, customizable button labels, password/content slots, loading/disabled states, and inline errors.
+- Uses the modal dialog element for focus trapping and an inert background, initially focuses the safe Cancel action, restores focus and body scrolling on close, and supports Escape/backdrop dismissal while idle. Immediate submission guards prevent double clicks and dismissal during a request.
+- Replaced every browser window.confirm in Family management: cancel invitation, remove member, change access, and ownership transfer. Resend now also explains that sending a new link invalidates the previous one before making a request.
+- Moved current-password confirmation into the dialog for sensitive role/ownership changes. Cancel clears it; failed submissions stay in the dialog for retry. Success feedback remains in the Family page. Server authorization and email provider remain unchanged.
+- Added lifecycle/event tests for modal opening/closing, focus/scroll restoration, idle/busy dismissal rules, duplicate submission protection, and safe error rendering using the actual component with isolated browser/hook adapters. These do not replace native browser accessibility or responsive visual checks.
+- Verification: all 61 automated tests, TypeScript, lint, and whitespace checks passed. No window.confirm, window.alert, or window.prompt calls remain in src.
+- No packages or external services were added. Production build remains dependent on the existing Google Fonts downloads; authenticated desktop/mobile browser verification remains pending.
+
+## 2026-10-18 — Invitation email failure diagnostics
+
+**Status:** Implemented — original live delivery failure still requires a retry/provider evidence
+
+- Replaced discarded Resend errors with safe, actionable classifications for configuration, key permissions, sender-domain verification, test-recipient restriction, rate/quota limits, malformed requests, provider errors, timeouts, and network failures. Raw provider responses, addresses, credentials, and tokens are not reflected in errors or logs.
+- Invitation managers now see the classified delivery error both immediately and in the refreshed invitation list. Resend clears the previous error; placeholder email configuration fails before creating/sending an invitation.
+- Separated email submission from recording SENT in MongoDB. A database status-write failure after a successful provider submission no longer incorrectly marks the email FAILED or recommends immediately rotating the delivered link.
+- Added provider classification/transport tests and service regressions for preserving safe errors and status-write failures, without sending real email.
+- Verification: all 57 tests, lint, TypeScript, and whitespace checks passed. Build remains blocked by the existing Google Fonts downloads. A value-free configuration check confirms the local sender uses resend.dev; that sender's recipient restriction is a possible cause, not confirmed provider evidence.
+- The original failure's root cause remains unconfirmed: prior direct provider checks were blocked by this environment's network permissions. Restart/retry to obtain the classified error; no claim of confirmed live delivery is made.
+
+## 2026-10-18 — Explicit wedding roles and protected ownership
+
+**Status:** Implemented — live database concurrency and interactive browser checks pending
+
+### Delivered and policy
+
+- Replaced broad family write access with Owner, Co-owner, Planner, and Viewer permissions. Only Owner/Co-owner can edit core wedding details; membership administration is restricted by role and target. Planner is reserved for writing planning resources as those vertical slices are implemented.
+- New invitations default to Viewer and allow only Viewer/Planner. Legacy FAMILY_MEMBER records and invitations with no role resolve to Viewer. Unknown roles fail closed; no data migration or automatic couple promotion was performed.
+- Protected Owner/Co-owner/Bride/Groom memberships from removal and blocked self-removal/self-role changes. Relationships remain descriptive. Only the primary Owner can grant/demote co-ownership, with current-password confirmation.
+- Added password-confirmed ownership transfer to an active Co-owner; the original owner becomes Planner. Transactional checks preserve exactly one primary owner and reject inactive, cross-wedding, stale-role, and invalid targets.
+- Added strict role-update/transfer APIs, sensitive-operation throttling, transactional access audit records, and a shared wedding write lock to serialize role changes against privileged writes and invitation acceptance.
+- Demoting/removing managers cancels their pending invitations. Rejoining cannot restore an old role or overwrite active membership. Viewer/Planner access cannot use the wedding PATCH API even through a forged request.
+- Added invitation role selectors, member Change access forms, password/transfer confirmations, role explanations, protected-member labels, permission-aware dashboard controls, and read-only wedding detail views. Family UI refreshes permissions on focus/visibility and every minute.
+- Updated Stitch prompts for the new access model and added docs/07-ACCESS-CONTROL.md with permission and recovery boundaries.
+
+### Decisions and limits
+
+- This is the user's explicitly approved extension beyond V1 common planning access. No packages or infrastructure were added.
+- Existing creators retain ownership until they explicitly grant Co-owner and transfer ownership. The application does not infer ownership from wedding names or relationships. Protected couple relationship correction is not exposed as a deletion workaround.
+- No production user roles or real account records were modified during implementation. Already-rendered/offline pages may show stale information, but subsequent server mutations recheck permissions.
+
+### Verification
+
+- All 51 automated tests, lint, TypeScript, and whitespace checks passed for this access-control slice.
+- Tests cover role matrices, protected relationships, attempted privilege escalation, incorrect/missing/throttled password confirmations, legacy roles, actual core-wedding update denial, transfer rollback, and simulated concurrent transfer/demotion using isolated adapters.
+- The production build remains blocked by the existing Newsreader and Plus Jakarta Sans Google Fonts downloads. Live Atlas transaction/concurrency and authenticated mobile/desktop browser checks remain pending; in-memory test serialization is not live database evidence.
+
+## 2026-10-18 — Family invitations, transactional email, and membership access
+
+**Status:** Implemented — live email/database and authenticated browser verification pending
+
+### Delivered
+
+- Replaced Family and join-route placeholders with member lists, owner-only invitation creation/resend/cancellation, delivery status, and confirmed member removal. Added Family navigation and a real dashboard family card.
+- Added Resend transactional email using the configured sender and trusted APP_BASE_URL. Email links expire after seven days, contain secure random tokens, and require explicit acceptance by a signed-in account matching the invited email. MongoDB persists only token hashes.
+- Added versioned member/invitation APIs with authentication, wedding membership, and owner checks. Invitation input is strict and cannot set ownership or access roles.
+- Acceptance creates/reactivates membership and consumes the invitation within one MongoDB transaction. Repeated acceptance by the same still-active member is safe. Removed members cannot restore access using their old accepted link.
+- Resending rotates the token. Compare-and-update guards reject concurrent changes; unique token and wedding/email indexes prevent duplicate invitation slots. Email failure remains visible and can be retried. Owner sending is limited to 20 attempts/hour with a one-minute per-invite cooldown.
+- Login/registration preserve only validated local invitation return paths. Join pages distinguish wrong accounts, signed-out users, unavailable links, and acceptance errors. Auth/join pages use no-referrer metadata and exclude indexing.
+- A membership-validated selection cookie opens the invited wedding rather than the user's first wedding; it does not grant access itself.
+- Added three copy-ready UX prompts in docs/06-FAMILY-INVITATION-STITCH-PROMPTS.md for the existing Wedding Family Collaboration Workspace project.
+
+### Access decisions and scope
+
+- The requested role-based access uses existing OWNER and FAMILY_MEMBER roles. Only owners administer invitations and member removal; both retain common wedding-planning access. Relationships are descriptive, not permissions. Role escalation, owner removal/transfer, custom roles, and guest RSVP are outside this slice.
+- This is an approved extension to V1's common-access policy for membership administration. Pending invitations and other members' email addresses are visible only to the owner.
+- An active wedding and intended email are rechecked during acceptance. Cancellation/expiry is enforced from record state and timestamps, without relying on a cleanup job.
+- Uses existing Next.js, native MongoDB, and Resend infrastructure. No new packages, background services, or real-recipient messages were introduced during verification.
+
+### Verification and remaining work
+
+- All 42 tests, lint, TypeScript, and whitespace checks passed. Lifecycle coverage verifies superseded/revoked/expired tokens, email mismatch, repeat acceptance, owner protection, removed-member access, failed delivery, rollback, and rate limits with isolated database/email adapters. Consumed links disclose details only to the matching still-active member.
+- Production build is blocked by the existing Newsreader and Plus Jakarta Sans Google Fonts download failures in this environment.
+- Real Resend delivery, actual MongoDB transaction concurrency/rollback, and interactive authenticated desktop/mobile browser testing remain pending. The in-memory adapter tests do not establish live database concurrency behaviour.
+- Configure RESEND_API_KEY, a verified EMAIL_FROM, and public APP_BASE_URL (HTTPS in production). Test delivery using a controlled recipient before release. Email delivery status means provider submission, not an inbox-delivery webhook confirmation.
+- A value-free local configuration check found MongoDB/base URL settings present, but no usable Resend key or sender configured. Real email delivery therefore remains blocked on email configuration; secrets were not printed or changed.
+- Broader deployment-level IP/bot protection and a general multi-wedding switcher are not added. Fresh server requests enforce member removal; already-rendered screens can remain visible until refresh.
+
 ## 2026-10-02 — Password recovery
 
 **Status:** Implemented — pending commit and live delivery verification

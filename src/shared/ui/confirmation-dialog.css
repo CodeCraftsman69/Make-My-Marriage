@@ -1,0 +1,15 @@
+.confirmation-dialog { width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); overflow-y: auto; margin: auto; border: 1px solid #e8e2d9; border-radius: 16px; padding: 30px; color: #362b27; background: #fffdf9; box-shadow: 0 24px 80px #36121c33; }
+.confirmation-dialog::backdrop { background: #2d111878; backdrop-filter: blur(4px); }
+.confirmation-dialog h2 { margin: 18px 0 10px; color: #581825; font: 400 30px/1.2 var(--font-editorial), Georgia, serif; overflow-wrap: anywhere; }
+.confirmation-dialog p { font-size: 14px; line-height: 1.7; color: #74665f; margin: 0 0 20px; overflow-wrap: anywhere; }
+.confirmation-dialog-icon { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid #e5d7be; border-radius: 50%; background: #f9f5ee; color: #77551e; font: 500 24px var(--font-editorial), Georgia, serif; }
+.confirmation-dialog-icon.is-danger { color: #9b2536; background: #faeef0; border-color: #e8c8ce; }
+.confirmation-dialog-fields { border: 0; padding: 0; margin: 20px 0; min-width: 0; }
+.confirmation-dialog .confirmation-dialog-error { color: #9b2536; background: #faeef0; border-radius: 6px; padding: 12px; }
+.confirmation-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.confirmation-dialog-actions button { min-height: 44px; border: 1px solid #e8e2d9; background: #fffdf9; border-radius: 7px; padding: 11px 16px; color: #581825; font-size: 13px; font-weight: 600; cursor: pointer; }
+.confirmation-dialog-actions .confirmation-dialog-confirm { background: #581825; border-color: #581825; color: #fff; }
+.confirmation-dialog-actions .confirmation-dialog-confirm.is-danger { background: #9b2536; border-color: #9b2536; }
+.confirmation-dialog-actions button:disabled { opacity: .6; cursor: wait; }
+.confirmation-dialog :focus-visible { outline: 3px solid #c5a059; outline-offset: 3px; }
+@media(max-width: 480px) { .confirmation-dialog { padding: 24px; }.confirmation-dialog-actions { flex-direction: column-reverse; }.confirmation-dialog-actions button { width: 100%; } }
